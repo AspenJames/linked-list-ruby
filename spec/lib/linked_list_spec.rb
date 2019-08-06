@@ -145,21 +145,127 @@ RSpec.describe LinkedList do
 	end
 
 	describe "deleting an element" do
+		before(:each) do
+			@ll = LinkedList.new
+		end
+
+		context "an element is not supplied" do
+			it "returns false" do
+				expect(@ll.delete()).to be false
+			end
+		end
+
 		context "the list is empty" do
+			it "returns false" do
+				el = Element.new(4)
+				expect(@ll.delete(el)).to be false
+			end
 		end
 
 		context "the list is populated" do
 			context "the element is not found" do
+				it "returns false" do
+					@ll.append(4)
+					@ll.append("data")
+					el = Element.new("findMe")
+					expect(@ll.delete(el)).to be false
+				end
 			end
 
 			context "the element is found" do
 				context "found element is head" do
+					before(:each) do
+						@ll.append(4)
+						@el = @ll.head
+					end
+
+					context "the list has only one element" do
+						it "sets the head and tail pointers to nil, returns true" do
+							expect(@ll.delete(@el)).to be true
+
+							expect(@ll.head).to be_nil
+							expect(@ll.tail).to be_nil
+						end
+					end
+
+					context "the list has two elements" do
+						it "sets the head pointer to the tail, returns true" do
+							@ll.append("data")
+							expect(@ll.delete(@el)).to be true
+
+							expect(@ll.head).to be(@ll.tail)
+							expect(@ll.head.value).to eq("data")
+							expect(@ll.head.next).to be_nil
+						end
+					end
+
+					context "the list has more than two elements" do
+						it "updates the head pointer to head's next, returns true" do
+							@ll.append("data")
+							@ll.append("more data")
+							expect(@ll.delete(@el)).to be true
+
+							expect(@ll.head.value).to eq("data")
+							expect(@ll.head.next).to be(@ll.tail)
+						end
+					end
 				end
 
 				context "found element is tail" do
+					before(:each) do
+						@ll.append(4)
+					end
+
+					context "the list has only one element" do
+						it "sets the head and tail pointers to nil, returns true" do
+							el = @ll.tail
+							expect(@ll.delete(el)).to be true
+
+							expect(@ll.head).to be_nil
+							expect(@ll.tail).to be_nil
+						end
+					end
+
+					context "the list has two elements" do
+						it "sets the tail pointer to the head, returns true" do
+							@ll.append("data")
+							el = @ll.tail
+							expect(@ll.delete(el)).to be true
+
+							expect(@ll.head).to be(@ll.tail)
+							expect(@ll.head.value).to eq(4)
+							expect(@ll.head.next).to be_nil
+						end
+					end
+
+					context "the list has more than two elements" do
+						it "sets the tail pointer to the element previous, returns true" do
+							@ll.append("data")
+							@ll.append("more data")
+							el = @ll.tail
+							expect(@ll.delete(el)).to be true
+
+							expect(@ll.head.value).to eq(4)
+							expect(@ll.tail.value).to eq("data")
+							expect(@ll.head.next).to be(@ll.tail)
+							expect(@ll.tail.next).to be_nil
+						end
+					end
 				end
 
 				context "found element is somewhere in the middle" do
+					it "deletes the supplied element, maintains the list, and returns true" do
+						ll = LinkedList.new
+						ll.append(4)
+						ll.append("data")
+						ll.append("more data")
+						el = ll.head.next
+						expect(ll.delete(el)).to be true
+
+						expect(ll.head.value).to eq(4)
+						expect(ll.tail.value).to eq("more data")
+						expect(ll.head.next).to be(ll.tail)
+					end
 				end
 			end
 		end
