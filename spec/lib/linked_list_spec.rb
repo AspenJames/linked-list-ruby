@@ -270,4 +270,109 @@ RSpec.describe LinkedList do
 			end
 		end
 	end
+
+	describe "inserting an element" do
+		before(:each) do
+			@ll = LinkedList.new
+		end
+
+		context "no element is supplied" do
+			it "returns false" do
+				expect(@ll.insertAfter(nil, "dataToInsert")).to be false
+			end
+		end
+
+		context "no data is supplied" do
+			it "returns false" do
+				@ll.append(4)
+				el = @ll.head
+				expect(@ll.insertAfter(el)).to be false
+			end
+		end
+
+		context "the list is empty" do
+			it "returns false" do
+				el = Element.new(4)
+				expect(@ll.insertAfter(el, "dataToInsert")).to be false
+			end
+		end
+
+		context "the list is populated" do
+			before(:each) do
+				@ll.append(4)
+			end
+
+			context "with one element" do
+				it "inserts element, updates tail, updates head.next, returns true" do
+					el = @ll.head
+					expect(@ll.insertAfter(el, "dataToInsert")).to be true
+
+					expect(@ll.head.value).to eq(4)
+					expect(@ll.tail.value).to eq("dataToInsert")
+					expect(@ll.head.next).to be(@ll.tail)
+				end
+			end
+
+			context "with two elements" do
+				before(:each) do
+					@ll.append("data")
+				end
+
+				context "inserting after head" do
+					it "inserts element, updates next pointers, returns true" do
+						el = @ll.head
+						expect(@ll.insertAfter(el, "dataToInsert")).to be true
+
+						expect(@ll.head.next.value).to eq("dataToInsert")
+						expect(@ll.head.value).to eq(4)
+						expect(@ll.head.next.next).to be(@ll.tail)
+					end
+				end
+
+				context "inserting after tail" do
+					it "inserts at end, updates tail and prev tail next, returns true" do
+						el = @ll.tail
+						expect(@ll.insertAfter(el, "dataToInsert")).to be true
+
+						expect(@ll.tail.value).to eq("dataToInsert")
+						expect(@ll.tail.next).to be_nil
+						expect(@ll.head.next.next).to be(@ll.tail)
+					end
+				end
+			end
+
+			context "with more than two elements" do
+				before(:each) do
+					@ll.append("data")
+					@ll.append("more data")
+				end
+
+				context "inserting after tail" do
+					it "inserts, updates the tail pointer, returns true" do
+						el = @ll.tail
+						expect(@ll.insertAfter(el, "dataToInsert")).to be true
+
+						expect(@ll.tail.value).to eq("dataToInsert")
+						expect(@ll.tail.next).to be_nil
+						expect(@ll.head.next.next.next).to be(@ll.tail)
+					end
+				end
+
+				context "inserting anywhere else" do
+					it "inserts, maintains the list, returns true" do
+						el = @ll.head
+						expect(@ll.insertAfter(el, "dataToInsert")).to be true
+
+						expect(@ll.head.next.value).to eq("dataToInsert")
+
+						@ll.delete(@ll.head.next)
+						el = @ll.head.next
+						expect(@ll.insertAfter(el, "dataToInsert")).to be true
+
+						expect(@ll.head.next.next.value).to eq("dataToInsert")
+					end
+				end
+			end
+		end
+	end
 end
