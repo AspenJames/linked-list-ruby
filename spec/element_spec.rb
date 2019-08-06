@@ -9,7 +9,7 @@ RSpec.describe Element do
 		end
 
 		it "throws an error if not passed data" do
-			expect{ Element.new }.to throw_exception
+			expect{ Element.new }.to raise_exception(ArgumentError)
 		end
 	end
 
@@ -17,7 +17,7 @@ RSpec.describe Element do
 		it "can return its value property" do
 			el = Element.new(4)
 
-			expect{ el.value }.not_to throw_exception
+			expect{ el.value }.not_to raise_exception
 		end
 
 		it "sets the value property to the data passed to `.new`" do
@@ -28,9 +28,9 @@ RSpec.describe Element do
 			expect(el2.value).to eq("data")
 		end
 
-		it "can update its value property with `#data=`" do
+		it "can update its value property with `#value=`" do
 			el = Element.new(4)
-			el.data = "otherData"
+			el.value = "otherData"
 
 			expect(el.value).to eq("otherData")
 		end
@@ -40,7 +40,7 @@ RSpec.describe Element do
 		it "can return its next property" do
 			el = Element.new(4)
 
-			expect{ el.next }.not_to throw_exception
+			expect{ el.next }.not_to raise_exception
 		end
 
 		it "is initialized to `nil`" do
