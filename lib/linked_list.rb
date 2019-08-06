@@ -36,4 +36,33 @@ class LinkedList
 
 		true
 	end
+
+	def delete(elem = nil)
+		return false if !@head || !elem
+		if @head == elem
+			if @head == @tail
+				@head = nil
+				@tail = nil
+				return true
+			else
+				@head = @head.next
+				return true
+			end
+		else
+			currElem = @head
+			while currElem.next != elem && currElem.next != nil
+				currElem = currElem.next
+			end
+			if currElem.next == elem
+				if currElem.next == @tail
+					@tail = currElem
+					currElem.next = nil
+					return true
+				end
+				currElem.next = currElem.next.next
+				return true
+			end
+		end
+		false
+	end
 end
