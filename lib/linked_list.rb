@@ -65,4 +65,39 @@ class LinkedList
 		end
 		false
 	end
+
+	def insertAfter(elem = nil, data = nil)
+		return false if !elem || !data || !@head
+
+		insertElem = Element.new(data)
+		if @head == elem
+			if @head == @tail
+				@head.next = insertElem
+				@tail = insertElem
+				return true
+			else
+				insertElem.next = @head.next
+				@head.next = insertElem
+				return true
+			end
+		end
+
+		if @tail == elem
+			@tail.next = insertElem
+			@tail = insertElem
+			return true
+		end
+
+		currElem = @head
+		while currElem != elem && currElem.next != nil
+			currElem = currElem.next
+		end
+		if currElem == elem
+			insertElem.next = currElem.next
+			currElem.next = insertElem
+			return true
+		end
+
+		false
+	end
 end
